@@ -9,10 +9,12 @@ if __name__ == "__main__":
     # esta es una ventana de pyglet.
     # le damos la resolución como parámetro
     try:
-        # si queremos más calidad visual (a un costo, claro)
-        # podemos activar antialiasing en caso de que esté disponible
-        config = pyglet.gl.Config(sample_buffers=1, samples=4)
-        window = pyglet.window.Window(960, 960, config=config)
+        # si queremos más calidad visual (a un costo, claro) podemos activar antialiasing en caso de que esté disponible
+        #config = pyglet.gl.Config(sample_buffers=1, samples=4)
+        #window = pyglet.window.Window(960, 960, config=config)
+
+        # en caso de que se vea una ventana gris, hay que desactivar lo anterior
+        window = pyglet.window.Window(960, 960)
     except pyglet.window.NoSuchConfigException:
         # si no está disponible, hacemos una ventana normal
         window = pyglet.window.Window(960, 960)
@@ -21,7 +23,7 @@ if __name__ == "__main__":
     # esta es la versión descargable desde Wikipedia
     # el formato STL es binario!
     bunny = tm.load("assets/Stanford_Bunny.stl")
-
+    
     # no sabemos de qué tamaño es el conejo.
     # y solo podemos dibujar en nuestro cubo de referencia
     # cuyas esquinas son [-1, -1, -1] y [1, 1, 1]
@@ -52,25 +54,28 @@ if __name__ == "__main__":
     # afortunadamente trimesh tiene una función que convierte el modelo 3D
     # a la representación adecuada para uso con OpenGL :)
     bunny_vertex_list = tm.rendering.mesh_to_vertexlist(bunny)
-
+    #print(bunny_vertex_list[6])
     # queremos dibujar al conejo con nuestro pipeline.
     # como dibujarlo dependerá de lo que contenga cada shader del pipeline,
     # tenemos que pedirle al pipeline que reserve espacio en la GPU
     # para copiar nuestro conejo a la memoria gráfica
+
+    
+    nvertices = bunny_vertex_list[0]
+    vertices_index = bunny_vertex_list[3]
+    vertices_coord = bunny_vertex_list[4][1]
+
     bunny_gpu = pipeline.vertex_list_indexed(
-        # ¿cuántos vértices contiene? 
-        # su quinto elemento contiene el tipo y las posiciones de los vértices.
-        # vertex_list[4][0] es vec3f (sabemos que es una posición en 3D de punto flotante)
-        # vertex_list[4][1] contiene las posiciones (x, y, z) de cada vértice
-        # todas concatenadas en una única lista.
-        # por eso el total de vértices es el largo de la lista dividido por 3.
-        len(bunny_vertex_list[4][1]) // 3,
-        # ¿cómo se dibujarán? en este caso, como triángulos
+        nvertices,
         GL.GL_TRIANGLES,
-        # su cuarto elemento contiene los índices de los vértices, es decir,
-        # cuales vértices de la lista conforman cada triángulo
-        bunny_vertex_list[3]
+        vertices_index
     )
+
+
+
+
+
+
 
     # en el código anterior no se copió la información a la GPU,
     # sino que se reservó espacio en la memoria para almacenar esos datos.
@@ -80,12 +85,13 @@ if __name__ == "__main__":
     # más adelante veremos que hay otro
     bunny_gpu.position[:] = bunny_vertex_list[4][1]
 
+    
     # GAME LOOP
     @window.event
     def on_draw():
         # esta función define el color con el que queda una ventana vacía
         # noten que esto es algo de OpenGL, no de pyglet
-        GL.glClearColor(0.5, 0.5, 0.5, 1.0)
+        GL.glClearColor(0.5, 0.5, 0.75, 1.0)
         # GL_LINE => Wireframe
         # GL_FILL => pinta el interior de cada triángulo
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
@@ -101,7 +107,7 @@ if __name__ == "__main__":
         pipeline.use()
         # hasta que le pedimos a bunny_gpu que grafique sus triángulos
         # utilizando el pipeline activo
-        bunny_gpu.draw(pyglet.gl.GL_TRIANGLES)
+        bunny_gpu.draw(GL.GL_TRIANGLES)
 
     # aquí comienza pyglet a ejecutar su loop.
     pyglet.app.run()

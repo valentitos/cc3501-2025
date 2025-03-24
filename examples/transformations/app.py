@@ -22,8 +22,9 @@ import grafica.transformations as tr
 
 if __name__ == "__main__":
     try:
-        config = pyglet.gl.Config(sample_buffers=1, samples=4)
-        window = pyglet.window.Window(960, 960, config=config)
+        #config = pyglet.gl.Config(sample_buffers=1, samples=4)
+        #window = pyglet.window.Window(960, 960, config=config)
+        window = pyglet.window.Window(960, 960)
     except pyglet.window.NoSuchConfigException:
         window = pyglet.window.Window(960, 960)
 
@@ -35,8 +36,9 @@ if __name__ == "__main__":
     # porque trimesh puede aplicar una matriz al modelo 3D
     # en otras situaciones las matrices subyacentes se aplicarían en un
     # vertex program
+    
     bunny_scale = tr.uniformScale(2.0 / bunny.scale)
-    bunny_translate = tr.translate(*-bunny.centroid)
+    bunny_translate = tr.translate(*-bunny.centroid) # * -> aplicar a los 3 parametros
     bunny_rotate = tr.rotationX(-np.pi / 2)
     
     # multiplicamos las matrices con el operador @
@@ -68,7 +70,7 @@ if __name__ == "__main__":
     # dibujaremos cuatro conejos, pero basta que lo copiemos una única vez a la GPU
     bunny_vertex_list = tm.rendering.mesh_to_vertexlist(bunny)
     bunny_gpu = pipeline.vertex_list_indexed(
-        len(bunny_vertex_list[4][1]) // 3,
+        bunny_vertex_list[0],
         GL.GL_TRIANGLES,
         bunny_vertex_list[3]
     )
@@ -104,8 +106,9 @@ if __name__ == "__main__":
         # cuánto tiempo (en segundos) ha pasado desde la última ejecución
         window.bunny_state['total_time'] += dt
         window.bunny_state['angle'] = window.bunny_state['total_time']
-        window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time'])
-
+        #window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time'])
+        #window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time']) @ tr.rotationZ(window.bunny_state['total_time'])
+        window.bunny_state['transform'] = tr.shearing(0, window.bunny_state['total_time']/5, 0, 0, 0, 0) 
     # aquí le pedimos a pyglet que ejecute nuestra función
     # noten que la ejecución de la actualización del mundo y de su graficación
     # se ejecutan por separado

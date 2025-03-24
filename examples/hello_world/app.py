@@ -21,7 +21,8 @@ if __name__ == "__main__":
         ],
         dtype=np.float32,
     )
-
+    
+    # formato de color RGB
     vertex_colors = np.array(
         [1.0, 204 / 255.0, 1.0,  # inf izq
          1.0, 204 / 255.0, 1.0,  # if der
@@ -30,6 +31,7 @@ if __name__ == "__main__":
         ],
         dtype=np.float32,
     )
+     
 
     # en OpenGL se dibujan triángulos.
     # por tanto, nuestro cuadrilátero tiene dos triángulos.
@@ -38,10 +40,14 @@ if __name__ == "__main__":
     # luego los vértices 2, 3 y 0.
     # noten que, al igual que los vértices, aquí todos los índices
     # van en un único arreglo
-    indices = np.array([0, 1, 2, 2, 3, 0], dtype=np.uint32)
+    indices = np.array(
+        [0, 1, 2,
+         2, 3, 0
+        ],
+        dtype=np.uint32
+    )
 
-    # cargamos nuestros shaders
-    # son shaders básicos.
+    # cargamos nuestros shaders; son shaders básicos.
     # el shader de vértices solo lee la posición y el color de cada vértice
     with open(Path(os.path.dirname(__file__)) / "vertex_program.glsl") as f:
         vertex_source_code = f.read()
@@ -70,7 +76,7 @@ if __name__ == "__main__":
     label = pyglet.text.Label('¡Hola, CC3501!',
                 font_name='Times New Roman',
                 font_size=36,
-                color=(0,0,0,255),
+                color=(0, 0, 0, 255),  #RGB
                 x=win.width//2, y=win.height//2,
                 anchor_x='center', anchor_y='center')
 
