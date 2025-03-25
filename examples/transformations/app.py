@@ -106,9 +106,14 @@ if __name__ == "__main__":
         # cuánto tiempo (en segundos) ha pasado desde la última ejecución
         window.bunny_state['total_time'] += dt
         window.bunny_state['angle'] = window.bunny_state['total_time']
-        #window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time'])
+        window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time'])
+
+        # aca abajo hay otros ejemplos de transformaciones... pueden ir descomentando de a uno, y comentando el de arriba
+        
         #window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time']) @ tr.rotationZ(window.bunny_state['total_time'])
-        window.bunny_state['transform'] = tr.shearing(0, window.bunny_state['total_time']/5, 0, 0, 0, 0) 
+        #window.bunny_state['transform'] = tr.shearing(0, window.bunny_state['total_time']/5, 0, 0, 0, 0) 
+        #window.bunny_state['transform'] = tr.rotationY(window.bunny_state['total_time']) @ tr.translate(1,0,0)
+        
     # aquí le pedimos a pyglet que ejecute nuestra función
     # noten que la ejecución de la actualización del mundo y de su graficación
     # se ejecutan por separado
