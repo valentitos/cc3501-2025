@@ -99,7 +99,9 @@ if __name__ == "__main__":
 
     bunny_vertex_list = tm.rendering.mesh_to_vertexlist(bunny)
     bunny_gpu = bunny_pipeline.vertex_list_indexed(
-        len(bunny_vertex_list[4][1]) // 3, GL.GL_TRIANGLES, bunny_vertex_list[3]
+        len(bunny_vertex_list[4][1]) // 3,
+        GL.GL_TRIANGLES,
+        bunny_vertex_list[3]
     )
     bunny_gpu.position[:] = bunny_vertex_list[4][1]
 
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     grid_pipeline = pyglet.graphics.shader.ShaderProgram(vert_shader, frag_shader)
 
     # construimos nuestra grilla.
-    grid_resolution = 10
+    grid_resolution = 20
 
     xv, yv = np.meshgrid(
         np.linspace(0, 1, grid_resolution),
@@ -176,7 +178,8 @@ if __name__ == "__main__":
         "total_time": 0.0,
         # transformación de la vista
         "view": tr.lookAt(
-            np.array([-1.0, 0, 0.25]),  # posición de la cámara
+            #np.array([-1.0, 0, 0.25]),  # posición de la cámara
+            np.array([1, 1, 1]),
             np.array([0, 0, 0.25]),  # hacia dónde apunta
             np.array([0.0, 0.0, 1.0]),  # vector para orientarla (arriba)
         ),
@@ -203,25 +206,17 @@ if __name__ == "__main__":
         # hora de dibujar al conejo! activamos su shader
         bunny_pipeline.use()
 
-        bunny_pipeline["transform"] = window.program_state["bunny"].reshape(
-            16, 1, order="F"
-        )
+        bunny_pipeline["transform"] = window.program_state["bunny"].reshape(16, 1, order="F")
         # le entregamos los nuevos parámetros al pipeline
         bunny_pipeline["view"] = window.program_state["view"].reshape(16, 1, order="F")
-        bunny_pipeline["projection"] = window.program_state["projection"].reshape(
-            16, 1, order="F"
-        )
+        bunny_pipeline["projection"] = window.program_state["projection"].reshape(16, 1, order="F")
         bunny_gpu.draw(GL.GL_TRIANGLES)
 
         # ahora la grilla. activamos su shader y le pasamos los parámetros correspondientes
         grid_pipeline.use()
-        grid_pipeline["transform"] = window.program_state["grid"].reshape(
-            16, 1, order="F"
-        )
+        grid_pipeline["transform"] = window.program_state["grid"].reshape(16, 1, order="F")
         grid_pipeline["view"] = window.program_state["view"].reshape(16, 1, order="F")
-        grid_pipeline["projection"] = window.program_state["projection"].reshape(
-            16, 1, order="F"
-        )
+        grid_pipeline["projection"] = window.program_state["projection"].reshape(16, 1, order="F")
         # como dibujaremos líneas y no polígonos, debemos especificarlo en la llamada a draw
         grid_gpu.draw(GL.GL_LINES)
 

@@ -93,7 +93,25 @@ if __name__ == "__main__":
             mesh["gpu_data"].uv[:] = object_vlist[6][1]
         else:
             # usualmente el color viene como c4B/static en vlist[6][0], lo que significa "color de 4 bytes". idealmente eso debe verificarse
-            mesh["gpu_data"].color[:] = object_vlist[6][1]
+            print(object_vlist[6][0])
+            if object_vlist[6][0] == "c4B/static":
+                mesh["gpu_data"].color[:] = object_vlist[6][1]
+            else:
+                newcol= []
+                H = object_vlist[6][1]
+                i = 0
+                k = 0
+                while i < len(H):
+                    if H[i] != 0:
+                        newcol.append(int(H[i]*255))
+                    else:
+                        newcol.append(int(0.5*255))
+                    i = i+1
+                    k = k+1
+                    if k == 3:
+                        k = 0
+                        newcol.append(255)
+                mesh["gpu_data"].color[:] = newcol
 
         vertex_lists[object_id] = mesh
 

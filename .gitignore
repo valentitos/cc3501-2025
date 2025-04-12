@@ -3,3 +3,7 @@ __pycache__/
 imgui.ini
 .DS_Store
 pyproject.toml
+/assets/cat1
+/assets/cat2
+/examples/ex_aux4
+/examples/sprite_test

@@ -34,6 +34,7 @@ def create_solar_system(mesh, mesh_pipeline, axis, axis_pipeline):
         transform=tr.uniformScale(0.8),
         color=np.array((1.0, 0.73, 0.03)),
     )
+    
     graph.add_node(
         "sun_axis",
         mesh=axis,
@@ -97,11 +98,13 @@ def update_solar_system(dt, window):
     # cada nodo es almacenado como un diccionario
     # por tanto, accedemos a él y a sus atributos con llaves de diccionario
     # que conocemos porque nosotres construimos el grafo
-    graph.nodes["earth"]["transform"] = tr.rotationY(2 * total_time) @ tr.translate(
-        2.5, 0.0, 0.0
+    graph.nodes["earth"]["transform"] = (
+        tr.rotationY(2 * total_time) 
+        @ tr.translate(2.5, 0.0, 0.0)
     )
-    graph.nodes["moon"]["transform"] = tr.rotationY(3 * total_time) @ tr.translate(
-        0.5, 0.0, 0.0
+    graph.nodes["moon"]["transform"] = (
+        tr.rotationY(3 * total_time) 
+        @ tr.translate(0.5, 0.0, 0.0)
     )
 
 
