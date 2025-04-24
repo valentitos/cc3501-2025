@@ -1,7 +1,7 @@
 import numpy as np
-from OpenGL.GL import glEnable, glDisable, glBindTexture, GL_TRIANGLES, GL_CULL_FACE, GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_LINEAR
+from OpenGL.GL import glEnable, glDisable, glBindTexture, GL_TRIANGLES, GL_CULL_FACE, GL_TEXTURE_2D, GL_CLAMP_TO_EDGE, GL_LINEAR, GL_NEAREST, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR
 from PIL import Image
-from grafica.textures import texture_2D_setup
+from grafica.textures import texture_2D_setup, textureWithMipMapSetup
 import grafica.transformations as tr
 
 class Texture():
@@ -32,13 +32,19 @@ class Texture():
             
 
     def create_from_image(self, image):
-        self.texture = texture_2D_setup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
+        if self.minFilterMode in [GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR]:
+            self.texture = textureWithMipMapSetup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
+        else:
+            self.texture = texture_2D_setup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
 
     def create_from_file(self, path):
         image = Image.open(path)
         self.width = image.size[0]
         self.height = image.size[1]
-        self.texture = texture_2D_setup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
+        if self.minFilterMode in [GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR]:
+            self.texture = textureWithMipMapSetup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
+        else:
+            self.texture = texture_2D_setup(image, self.sWrapMode, self.tWrapMode, self.minFilterMode, self.maxFilterMode, self.flip_top_bottom)
 
     def bind(self):
         glBindTexture(GL_TEXTURE_2D, self.texture)

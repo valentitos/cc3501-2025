@@ -7,3 +7,13 @@ pyproject.toml
 /assets/cat2
 /examples/ex_aux4
 /examples/sprite_test
+Tarea2/template.py
+Tarea2/assets/back.jpg
+Tarea2/assets/bird_body.png
+Tarea2/assets/bird_wing.png
+Tarea2/assets/pipe.png
+Tarea2/librerias/drawables.py
+Tarea2/librerias/scene_graph.py
+Tarea2/librerias/shapes.py
+Tarea2/librerias/textures.py
+Tarea2/librerias/transformations.py
