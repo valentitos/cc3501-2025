@@ -15,6 +15,8 @@ from grafica.utils import load_pipeline
 from grafica.arcball import Arcball
 from grafica.textures import texture_2D_setup
 
+# versión que incorpora la posibilidad de ver el wireframe del modelo cargado
+
 if __name__ == "__main__":
     width = 960
     height = 960
